@@ -87,3 +87,5 @@ print(gameList)
 #         curpageHeight = newpageHght
 # 
 # scrap(driver)
+
+# 현재 진행사항 
