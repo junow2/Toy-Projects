@@ -1,0 +1,84 @@
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException
+import time
+
+
+opt = Options()
+
+# 브라우저 꺼짐 방지 옵션 - 개발용
+opt.add_experimental_option("detach", True) 
+# 불필요한 에러 메시지 삭제 
+opt.add_experimental_option('excludeSwitches', ['enable-logging'])
+
+d1 = webdriver.Chrome(options=opt)
+d2 = webdriver.Chrome(options=opt)
+
+# 성인 인증 절차를 미리 해결 
+def adult_cert(driver, driver_eng): 
+
+    # 성인 인증이 필요한 게임 페이지
+    driver.get('https://store.steampowered.com/agecheck/app/553850/')
+    driver_eng.get('https://store.steampowered.com/agecheck/app/553850/')
+
+    time.sleep(1)
+    
+    driver.find_element(By.ID, 'ageYear').click()
+    driver_eng.find_element(By.ID, 'ageYear').click()
+
+    time.sleep(1)
+
+
+    driver.find_element(By.XPATH, '//*[@id="ageYear"]/option[101]').click()
+    driver_eng.find_element(By.XPATH, '//*[@id="ageYear"]/option[101]').click()
+
+    time.sleep(1)
+
+    driver.find_element(By.ID, 'view_product_page_btn').click()
+    driver_eng.find_element(By.ID, 'view_product_page_btn').click()
+
+    time.sleep(2)
+
+adult_cert(d1, d2)
+
+# 해당 페이지 게임 상세정보 스크래핑 
+def gameInfo_scrap(driver, driver_eng, url):
+
+    tagLi = []
+    infoLi = [] 
+
+    # 성인게임 판별을 위한 태그체킹
+    adultTag = ['헨타이', '후방주의', '선정적인 내용']
+
+    driver.implicity_wait(10)
+    driver_eng.implicity_wait(10)
+
+    driver.get(url)
+    driver_eng.get(url)
+
+    # 태그 수집 
+    try:
+        tags = driver.find_element(By.CLASS_NAME,'glance_tags.popular_tags').find_elements(By.CLASS_NAME,'app_tag')
+    except NoSuchElementException:
+        tags = None
+
+    for tag in tags:
+        if tag.text != '':
+            tagLi.append(tag.text)
+    tagLi.remove('+')
+
+    # 제목 수집 
+    title = driver.find_element(By.ID, 'appHubAppName').text
+
+    # 개발사 / 배급사 수집 
+    company = driver.find_element(By.XPATH, '//*[@id="developers_list"]/a').text
+    publisher = driver.find_element(By.XPATH, '//*[@id="game_highlights"]/div[1]/div/div[3]/div[4]/div[2]/a').text
+
+    # 게임 정보
+    info = driver.find_element(By.CLASS_NAME, 'game_description_snippet')
+
+    
+        
