@@ -19,6 +19,7 @@ d1 = webdriver.Chrome(options=opt)
 
 url = 'https://store.steampowered.com/app/578080/PUBG_BATTLEGROUNDS/'
 tagLi = []
+scrLi = []
 d1.get(url)
 
 #try:
@@ -47,3 +48,9 @@ d1.get(url)
 
 # info = d1.find_element(By.CLASS_NAME, 'game_description_snippet').text
 # print(info)
+
+screenshot = d1.find_elements(By.CLASS_NAME, 'highlight_strip_item.highlight_strip_screenshot')
+for scr in screenshot:
+    scrLi.append(scr.find_element(By.TAG_NAME, 'img').get_attribute('src'))
+
+print(scrLi)
