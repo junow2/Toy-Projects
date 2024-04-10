@@ -49,6 +49,8 @@ def gameInfo_scrap(driver, driver_eng, url):
 
     tagLi = []
     infoLi = [] 
+    scrLi = []
+    titleLi = []
 
     # 성인게임 판별을 위한 태그체킹
     adultTag = ['헨타이', '후방주의', '선정적인 내용']
@@ -72,13 +74,34 @@ def gameInfo_scrap(driver, driver_eng, url):
 
     # 제목 수집 
     title = driver.find_element(By.ID, 'appHubAppName').text
+    title_en = driver_eng.find_element(By.ID, 'appHubAppName').text
+    titleLi.append(title)
+    titleLi.append(title_en)
+
+    titleLi = sorted(set(titleLi))
 
     # 개발사 / 배급사 수집 
     company = driver.find_element(By.XPATH, '//*[@id="developers_list"]/a').text
     publisher = driver.find_element(By.XPATH, '//*[@id="game_highlights"]/div[1]/div/div[3]/div[4]/div[2]/a').text
 
     # 게임 정보
-    info = driver.find_element(By.CLASS_NAME, 'game_description_snippet')
+    description = driver.find_element(By.CLASS_NAME, 'game_description_snippet')
+
+    # 스크린샷
+    screenshot = driver.find_elements(By.CLASS_NAME, 'highlight_strip_item.highlight_strip_screenshot')
+    for scr in screenshot:
+        scrLi.append(scr.find_element(By.TAG_NAME, 'img').get_attribute('src'))
 
     
-        
+    # 정보 딕셔너리 
+    Info_dic = {
+        'tag': ",".join(tagLi),
+        'title': ",".join(titleLi),
+        'description': description,
+        'company': company,
+        'publisher': publisher,
+        'screenshot': ",".join(scrLi),
+        'platform': "steam"
+    }
+
+    return Info_dic

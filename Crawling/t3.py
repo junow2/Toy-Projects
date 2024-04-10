@@ -49,8 +49,9 @@ d1.get(url)
 # info = d1.find_element(By.CLASS_NAME, 'game_description_snippet').text
 # print(info)
 
-screenshot = d1.find_elements(By.CLASS_NAME, 'highlight_strip_item.highlight_strip_screenshot')
-for scr in screenshot:
-    scrLi.append(scr.find_element(By.TAG_NAME, 'img').get_attribute('src'))
+# screenshot = d1.find_elements(By.CLASS_NAME, 'highlight_strip_item.highlight_strip_screenshot')
+# for scr in screenshot:
+#     scrLi.append(scr.find_element(By.TAG_NAME, 'img').get_attribute('src'))
 
-print(scrLi)
+# print(scrLi)
+
