@@ -3,7 +3,12 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
+import pandas as pd
 import time
+
+from t4 import adult_cert, gameInfo_scrap
+from t3 import scrap_gameList
 
 # 스팀 상점 페이지 주소 (한국어&영어)
 get_url = "https://store.steampowered.com/search/?supportedlang=english%2Ckoreana&filter=topsellers&ndl=1"
@@ -15,38 +20,28 @@ opt = Options()
 # 불필요한 에러 메시지 삭제 
 opt.add_experimental_option('excludeSwitches', ['enable-logging'])
 
-# 웹페이지 실행 
 driver = webdriver.Chrome(options=opt)
-driver.get(get_url)
+driver_eng = webdriver.Chrome(options=opt)
 
-# 언어 전화 로딩 대기
-time.sleep(2)
+# 스팀 게임 목록 
+driver.get("https://store.steampowered.com/search/?supportedlang=english%2Ckoreana&filter=topsellers&ndl=1")
 
-# driver.execute_script('ChangeLanguage("Korean")')
-# driver.find_element_by_xpath('//*[@id="language_pulldown"]').click()
 # 사이트를 한국어로 전환
 driver.find_element(By.XPATH, '//*[@id="language_pulldown"]').click()
 driver.find_element(By.XPATH, '//*[@id="language_dropdown"]/div/a[4]').click()
-
-driver.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+# 언어 전화 로딩 대기
 time.sleep(2)
-gameList = list()
 
-gameRows = driver.find_element(By.ID, 'search_resultsRows')
-games = gameRows.find_elements(By.TAG_NAME, 'a')
+# 게임 목록 크롤링
+gameList = scrap_gameList(driver)
 
-for i in range(len(gameList), len(games)):
-    title = games[i].find_element(By.CLASS_NAME, 'title').text
-    url = games[i].get_attribute('href')
-    releaseDate = games[i].find_element(By.CLASS_NAME, 'col.search_released.responsive_secondrow').text
-    
-    my_game = {
-        'title': title,
-        'url': url,
-        'date': releaseDate
-    }
+# print(gameList)
 
-    gameList.append(my_game)
+# 성인 인증 미리 받기 
+# adult_cert(driver, driver_eng)
 
-# for game in gameList:
-#     print(game)
+# 
+
+gameList_df = pd.DataFrame(gameList)
+
+print(gameList_df)

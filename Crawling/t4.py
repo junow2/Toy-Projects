@@ -4,18 +4,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
+import pandas as pd
 import time
-
-
-opt = Options()
-
-# 브라우저 꺼짐 방지 옵션 - 개발용
-opt.add_experimental_option("detach", True) 
-# 불필요한 에러 메시지 삭제 
-opt.add_experimental_option('excludeSwitches', ['enable-logging'])
-
-d1 = webdriver.Chrome(options=opt)
-d2 = webdriver.Chrome(options=opt)
 
 # 성인 인증 절차를 미리 해결 
 def adult_cert(driver, driver_eng): 
@@ -42,8 +32,6 @@ def adult_cert(driver, driver_eng):
 
     time.sleep(2)
 
-adult_cert(d1, d2)
-
 # 해당 페이지 게임 상세정보 스크래핑 
 def gameInfo_scrap(driver, driver_eng, url):
 
@@ -55,8 +43,8 @@ def gameInfo_scrap(driver, driver_eng, url):
     # 성인게임 판별을 위한 태그체킹
     adultTag = ['헨타이', '후방주의', '선정적인 내용']
 
-    driver.implicity_wait(10)
-    driver_eng.implicity_wait(10)
+    driver.implicitly_wait(10)
+    driver_eng.implicitly_wait(10)
 
     driver.get(url)
     driver_eng.get(url)

@@ -7,51 +7,43 @@ from selenium.common.exceptions import NoSuchElementException
 import time
 
 
-opt = Options()
+def scrap_gameList(driver): 
+    gameLi = list()
+    doScroll = True
 
-# 브라우저 꺼짐 방지 옵션 - 개발용
-opt.add_experimental_option("detach", True) 
-# 불필요한 에러 메시지 삭제 
-opt.add_experimental_option('excludeSwitches', ['enable-logging'])
+    # 현재 높이 저장
+    curpageHeight = driver.execute_script('return document.body.scrollHeight')
 
-d1 = webdriver.Chrome(options=opt)
-# d2 = webdriver.Chrome(options=opt)
+    # 로딩할 페이지가 있는동안 
+    while(doScroll):
+        # 페이지 끝으로 이동
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight)")
 
-url = 'https://store.steampowered.com/app/578080/PUBG_BATTLEGROUNDS/'
-tagLi = []
-scrLi = []
-d1.get(url)
+        # 로딩 대기 
+        time.sleep(1)
 
-#try:
-#    tags = d1.find_element(By.CLASS_NAME,'glance_tags.popular_tags').find_elements(By.CLASS_NAME,'app_tag')
-#except NoSuchElementException:
-#    tags = None
-#
-#for tag in tags:
-#    if tag.text != '':
-#        tagLi.append(tag.text)
-#
-#tagLi.remove('+')
-#print(tagLi)
+        # 새로 이동한 높이
+        newpageHght = driver.execute_script('return document.body.scrollHeight')
 
-# title = d1.find_element(By.ID, 'appHubAppName').text
-# print(title)
+        if curpageHeight == newpageHght:
+            doScroll  = False
+            break
 
-# 썸네일 크롤링 = 사이트 ? 
+        curpageHeight = newpageHght
 
-# 개발사 / 배급사 
-# company = d1.find_element(By.XPATH, '//*[@id="developers_list"]/a').text
-# publisher = d1.find_element(By.XPATH, '//*[@id="game_highlights"]/div[1]/div/div[3]/div[4]/div[2]/a').text
-# 
-# print(company)
-# print(publisher)
+        gameRows = driver.find_element(By.ID, 'search_resultsRows')
+        games = gameRows.find_elements(By.TAG_NAME, 'a')
 
-# info = d1.find_element(By.CLASS_NAME, 'game_description_snippet').text
-# print(info)
+        for i in range(len(gameLi), len(games)):
+            title = games[i].find_element(By.CLASS_NAME, 'title').text
+            url = games[i].get_attribute('href')
+            releaseDate = games[i].find_element(By.CLASS_NAME, 'col.search_released.responsive_secondrow').text
 
-# screenshot = d1.find_elements(By.CLASS_NAME, 'highlight_strip_item.highlight_strip_screenshot')
-# for scr in screenshot:
-#     scrLi.append(scr.find_element(By.TAG_NAME, 'img').get_attribute('src'))
+            my_game = {
+                'title': title,
+                'url': url,
+                'date': releaseDate
+            }
+            gameLi.append(my_game)
 
-# print(scrLi)
-
+    return gameLi
