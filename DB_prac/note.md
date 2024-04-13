@@ -21,11 +21,13 @@ https://steamcdn-a.akamaihd.net/steam/apps/<APP_ID>/library_600x900_2x.jpg
 
 ## gameDB MySQL TABLE
 ```sql
-ID          int(10), 
-title       char(50), 
-studio      varchar(50), 
-publisher   varchar(50), 
-tag         varchar(50), 
-game_info   TEXT NULL, 
-platform    varchar(25)
+CREATE TABLE gameInfo(
+    id INT(11),
+    title varchar(50),
+    studio varchar(50),
+    publisher varchar(50),
+    tag JSON,
+    info TEXT NULL,
+    platform varchar(25)
+);
 ```
