@@ -73,7 +73,7 @@ def gameInfo_scrap(driver, driver_eng, url):
     publisher = driver.find_element(By.XPATH, '//*[@id="game_highlights"]/div[1]/div/div[3]/div[4]/div[2]/a').text
 
     # 게임 정보
-    description = driver.find_element(By.CLASS_NAME, 'game_description_snippet')
+    description = driver.find_element(By.CLASS_NAME, 'game_description_snippet').text
 
     # 스크린샷
     screenshot = driver.find_elements(By.CLASS_NAME, 'highlight_strip_item.highlight_strip_screenshot')
@@ -88,7 +88,7 @@ def gameInfo_scrap(driver, driver_eng, url):
         'description': description,
         'company': company,
         'publisher': publisher,
-        'screenshot': ",".join(scrLi),
+        # 'screenshot': ",".join(scrLi),
         'platform': "steam"
     }
 
