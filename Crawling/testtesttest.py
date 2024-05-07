@@ -34,9 +34,9 @@ time.sleep(3)
 # 리스트에서 게임만 선택 - DLC, 사운드트랙 등 필요없는 요소들 제거 
 # driver.find_element(By.XPATH, '//*[@id="additional_search_options"]/div[5]/div[1]/div').click()
 # driver.find_element(By.XPATH, '//*[@id="additional_search_options"]/div[5]/div[1]/div').send_keys(Keys.ENTER)
-element = driver.find_element(By.XPATH, '//*[@id="additional_search_options"]/div[4]/div[1]/div')
-driver.execute_script("arguments[0].click();", element)
-driver.find_element(By.XPATH, '//*[@id="narrow_category1"]/div[1]/span').click()
+# element = driver.find_element(By.XPATH, '//*[@id="additional_search_options"]/div[4]/div[1]/div')
+# driver.execute_script("arguments[0].click();", element)
+# driver.find_element(By.XPATH, '//*[@id="narrow_category1"]/div[1]/span').click()
 
 #제거 대기
 time.sleep(2)
@@ -55,7 +55,7 @@ time.sleep(2)
 
 # print(gameList_df)
 
-testc = gameInfo_scrap(driver, driver_eng, 'https://store.steampowered.com/app/990080/_/')
+testc = gameInfo_scrap(driver, driver_eng, 'https://store.steampowered.com/app/1049590/_/')
 
 for k, v in testc.items():
    print(k, v)
